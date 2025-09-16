@@ -36,8 +36,25 @@ public class ScoreBoardTest {
     }
 
     @Test
-    public void doubleStartGameTest() {
+    public void startGameTwiceTest() {
         var game1 = scoreBoard.startGame(homeTeamName, awayTeamName);
+        var game2 = scoreBoard.startGame(homeTeamName, awayTeamName);
+        assertEquals(game1, game2);
+        verifyNewGame(game1, homeTeamName, awayTeamName);
+        verifyNewGame(game2, homeTeamName, awayTeamName);
+
+        var summary = scoreBoard.getSummary();
+        assertNotNull(summary);
+        assertEquals(summary.size(), 1);
+        var theOnlyGame = summary.get(0);
+        verifyNewGame(theOnlyGame, homeTeamName, awayTeamName);
+    }
+
+        @Test
+    public void startGameAfterNonZeroResultWasSetTest() {
+        var game1 = scoreBoard.startGame(homeTeamName, awayTeamName);
+        scoreBoard.updateScore(game1, 1, 2);
+
         var game2 = scoreBoard.startGame(homeTeamName, awayTeamName);
         assertEquals(game1, game2);
         verifyNewGame(game1, homeTeamName, awayTeamName);
@@ -57,6 +74,23 @@ public class ScoreBoardTest {
         var summary = scoreBoard.getSummary();
         assertEquals(summary.size(), 1);
 
+        scoreBoard.finishGame(game);
+        summary = scoreBoard.getSummary();
+        assertEquals(summary.size(), 0);
+    }
+
+    @Test
+    void finishGameTwiceTest() {
+        var game = scoreBoard.startGame(homeTeamName, awayTeamName);
+        scoreBoard.updateScore(game, 1, 0);
+        var summary = scoreBoard.getSummary();
+        assertEquals(summary.size(), 1);
+
+        scoreBoard.finishGame(game);
+        summary = scoreBoard.getSummary();
+        assertEquals(summary.size(), 0);
+
+        // 2nd time
         scoreBoard.finishGame(game);
         summary = scoreBoard.getSummary();
         assertEquals(summary.size(), 0);
@@ -105,9 +139,8 @@ public class ScoreBoardTest {
         assertEquals(theOnlyGame.getAwayScore(), maxScore);
     }
 
-    
     @Test
-    void getSummaryMultipleGameTest() {
+    void getSummaryMultipleGameTest() throws InterruptedException {
         List<IGame> inputGames = List.of(
                 new Game("Mexico", "Canada", 0, 5),
                 new Game("Spain", "Brazil", 10, 2),
@@ -125,15 +158,21 @@ public class ScoreBoardTest {
         for (IGame input : inputGames) {
             var game = scoreBoard.startGame(input.getHomeTeamName(), input.getAwayTeamName());
             scoreBoard.updateScore(game, input.getHomeScore(), input.getAwayScore());
+            Thread.sleep(0, 10);
         }
 
         var summary = scoreBoard.getSummary();
         assertEquals(summary.size(), expectedSummary.size());
 
+        for (IGame game : summary) {
+            System.out.println(game);
+        }
+
         var cnt = 0;
-        for(IGame expectedGame : expectedSummary) {
+        for (IGame expectedGame : expectedSummary) {
             var summaryGame = summary.get(cnt);
-            assertTrue(expectedGame.equals(summaryGame),  "Comparing game from score table on position %d.".formatted(cnt));
+            assertTrue(expectedGame.equals(summaryGame),
+                    "Comparing game from score table on position %d.".formatted(cnt));
             cnt++;
         }
 
