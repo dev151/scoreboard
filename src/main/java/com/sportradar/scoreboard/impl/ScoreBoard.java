@@ -21,13 +21,12 @@ public class ScoreBoard implements IScoreBoard {
             if(scoreBoard.containsKey(key)) {
                 // game already started, make sure it maintains the initial 0-0 result
                 var game = scoreBoard.get(key);
-                game.setHomeScore(0);
-                game.setAwayScore(0);
+                game.setScore(0, 0);
                 return game;
             }
 
             // create new game with initial scores
-            var game = new Game(homeTeamName, awayTeamName, 0, 0);
+            var game = new Game(homeTeamName, awayTeamName);
             scoreBoard.put(key, game);
             return game;
         }
@@ -45,8 +44,7 @@ public class ScoreBoard implements IScoreBoard {
 
     @Override
     public void updateScore(IGame game, int homeTeamScore, int awayTeamScore) {
-        game.setHomeScore(homeTeamScore);
-        game.setAwayScore(awayTeamScore);
+        game.setScore(homeTeamScore, awayTeamScore);
     }
 
     @Override

@@ -12,6 +12,10 @@ public class Game implements IGame {
     private int homeScore;
     private int awayScore;
 
+    public Game(String homeTeamName, String awayTeamName) {
+        this(homeTeamName, awayTeamName, 0, 0);
+    }
+
     public Game(String homeTeamName, String awayTeamName, int homeScore, int awayScore) {
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
@@ -47,11 +51,8 @@ public class Game implements IGame {
     }
 
     // setters
-    public void setHomeScore(int homeScore) {
+    public void setScore(int homeScore, int awayScore) {
         this.homeScore = homeScore;
-    }
-
-    public void setAwayScore(int awayScore) {
         this.awayScore = awayScore;
     }
 
@@ -64,8 +65,7 @@ public class Game implements IGame {
             return false;
         }
         Game game = (Game) o;
-        return homeScore == game.homeScore && awayScore == game.awayScore
-                && Objects.equals(homeTeamName, game.homeTeamName) && Objects.equals(awayTeamName, game.awayTeamName);
+        return Objects.equals(homeTeamName, game.homeTeamName) && Objects.equals(awayTeamName, game.awayTeamName);
     }
 
     @Override

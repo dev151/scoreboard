@@ -50,7 +50,7 @@ public class ScoreBoardTest {
         verifyNewGame(theOnlyGame, homeTeamName, awayTeamName);
     }
 
-        @Test
+    @Test
     public void startGameAfterNonZeroResultWasSetTest() {
         var game1 = scoreBoard.startGame(homeTeamName, awayTeamName);
         scoreBoard.updateScore(game1, 1, 2);
@@ -173,8 +173,10 @@ public class ScoreBoardTest {
             var summaryGame = summary.get(cnt);
             assertTrue(expectedGame.equals(summaryGame),
                     "Comparing game from score table on position %d.".formatted(cnt));
+            assertEquals(expectedGame.getHomeScore(), summaryGame.getHomeScore());
+            assertEquals(expectedGame.getAwayScore(), summaryGame.getAwayScore());
+
             cnt++;
         }
-
     }
 }

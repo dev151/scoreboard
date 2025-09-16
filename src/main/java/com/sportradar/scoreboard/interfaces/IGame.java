@@ -11,9 +11,7 @@ public interface IGame {
 
     public int getAwayScore();
 
-    public void setHomeScore(int homeScore);
-
-    public void setAwayScore(int awayScore);
+    public void setScore(int homeScore, int awayScore);
 
     public LocalDateTime getStartDateTime();
 }
